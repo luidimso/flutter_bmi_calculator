@@ -14,6 +14,37 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  TextEditingController weightController = TextEditingController();
+  TextEditingController heightController = TextEditingController();
+  String infoText = "Insert your data!";
+
+  void resetFields() {
+    setState(() {
+      weightController.text = "";
+      heightController.text = "";
+      infoText = "Insert your data!";
+    });
+  }
+
+  void calculate() {
+    double weight = double.parse(weightController.text);
+    double height = double.parse(heightController.text) / 100;
+    double bmi = weight / (height * height);
+
+    setState(() {
+      if(bmi <= 18.5) {
+        infoText = "Underweight (${bmi})";
+      } else if(bmi > 18.5 && bmi <= 25) {
+        infoText = "Normal range (${bmi})";
+      } else if(bmi > 25 && bmi <= 30) {
+        infoText = "Overweight (${bmi})";
+      } else {
+        infoText = "Obesity (${bmi})";
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,10 +52,10 @@ class _HomeState extends State<Home> {
         title: const Text("BMI Calculator"),
         centerTitle: true,
         backgroundColor: Colors.green,
-        actions: const [
+        actions: [
            IconButton(
-              onPressed: null,
-              icon: Icon(Icons.refresh)
+              onPressed: resetFields,
+              icon: const Icon(Icons.refresh)
           )
         ],
       ),
@@ -38,30 +69,32 @@ class _HomeState extends State<Home> {
               size: 120.0,
               color: Colors.green,
             ),
-            const TextField(
+            TextField(
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: "Weight",
                 labelStyle: TextStyle(
                   color: Colors.green
-                )
+                ),
               ),
+              controller: weightController,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.green,
                 fontSize: 25.0
               ),
             ),
-            const TextField(
+            TextField(
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   labelText: "Height",
                   labelStyle: TextStyle(
                       color: Colors.green
                   )
               ),
+              controller: heightController,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                   color: Colors.green,
                   fontSize: 25.0
               ),
@@ -74,7 +107,7 @@ class _HomeState extends State<Home> {
               child: Container(
                 height: 50.0,
                 child: ElevatedButton(
-                  onPressed: null,
+                  onPressed: calculate,
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(Colors.green)
                   ),
@@ -87,9 +120,9 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
-            const Text("Test",
+            Text(infoText,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.green,
                 fontSize: 25.0
               ),
